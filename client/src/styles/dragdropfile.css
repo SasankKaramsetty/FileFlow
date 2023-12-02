@@ -1,0 +1,21 @@
+/* DragDropFiles.css */
+
+/* Add your styling for the dropzone, text color, etc. here */
+.dropzone {
+    /* Example styles, customize as needed */
+    border: 2px dashed #aaaaaa;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .accepted {
+    border-color: #4caf50; /* Green border for accepted files */
+  }
+  
+  .rejected {
+    border-color: #f44336; /* Red border for rejected files */
+  }
+  
+  /* Add more styles as needed */
+  

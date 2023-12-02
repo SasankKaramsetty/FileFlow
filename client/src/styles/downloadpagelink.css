@@ -1,0 +1,45 @@
+/* downloadpagelink.css */
+
+/* Container styling */
+.download-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+  }
+  
+  /* Header styling */
+  .download-container h1 {
+    color: #333;
+  }
+  
+  /* Download link container styling */
+  .download-link-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Download link styling */
+  .download-link {
+    flex-grow: 1;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px;
+  }
+  
+  /* Image styling */
+  .copy-image {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  /* Hover effect on image */
+  .copy-image:hover {
+    opacity: 0.8;
+  }
+  

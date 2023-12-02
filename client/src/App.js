@@ -16,7 +16,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "../src/dropzone/HomePage";
 import UserProfile from "../src/dropzone/UserProfile";
 import HistoryPage from "../src/dropzone/HistoryPage";
-
+import axios from "axios";
+axios.defaults.baseURL="http://localhost:8000/";
 const App = () => {
   return (
     <Router>
