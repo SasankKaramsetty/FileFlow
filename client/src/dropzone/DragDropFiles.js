@@ -2,19 +2,23 @@ import React, { useState, useRef, useCallback } from "react";
 import axios from 'axios';
 import { useDropzone } from "react-dropzone";
 import DownloadFile from "./DownloadFile";
-import "../styles/dragdropfile.css"; // Import the CSS file
-
-/**
- * @typedef {"uploading" | "upload failed" | "uploaded"} UploadState
- */
+import "../styles/dragdropfile.css"; 
+import EmailForm from "./EmailForm";
 
 const DragDropFiles = () => {
   const [files, setFiles] = useState([]);
-  const [Id, setId] = useState(null);
   const [downloadPageLink, setDownloadPageLink] = useState(null);
   const [uploadState, setUploadState] = useState(null);
   const [isDragReject, setIsDragReject] = useState(false);
   const inputRef = useRef();
+
+  const extractIdFromDownloadPageLink = (downloadPageLink) => {
+    if (!downloadPageLink) {
+      return null;
+    }
+    const parts = downloadPageLink.split('/');
+    return parts[parts.length - 1];
+  };
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     setIsDragReject(rejectedFiles.length > 0);
@@ -65,7 +69,7 @@ const DragDropFiles = () => {
       });
 
       setDownloadPageLink(data.downloadPageLink);
-      setId(data.Id);
+      console.log("this is the id", extractIdFromDownloadPageLink(data.downloadPageLink));
       setUploadState("uploaded");
     } catch (error) {
       console.log(error.response.data);
@@ -87,6 +91,7 @@ const DragDropFiles = () => {
           <button onClick={() => setFiles([])}>Cancel</button>
           <button onClick={handleUpload}>Upload</button>
           {downloadPageLink && <DownloadFile downloadPageLink={downloadPageLink} />}
+          <EmailForm id={extractIdFromDownloadPageLink(downloadPageLink)} />
         </div>
       </div>
     );
