@@ -7,11 +7,8 @@ import nodemailer from "nodemailer";
 import emailTemplate from "../utils/emailTemplate";
 import { error } from "console";
 import cors from "cors";
-// import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import UserDetails from "../models/userDetails";
-// const app=express();
-// const cors=require("cors");
 express().use(cors());
 const router=express.Router();
 const storage=multer.diskStorage({});
@@ -191,4 +188,27 @@ router.post("/signup",async(req,res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
+router.get("/profile/:id", async (req, res) => {
+    try {
+      const userId = req.params.id;
+      
+      // Check if the user exists
+      const user = await UserDetails.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      // Return user information
+      res.status(200).json({
+        _id: user._id,
+        fname: user.fname,
+        lname: user.lname,
+        email: user.email,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
 export default router;
