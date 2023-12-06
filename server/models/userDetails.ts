@@ -1,18 +1,3 @@
-// import mongoose,{Document} from "mongoose";
-// // import
-// const userSchema=mongoose.Schema;
-
-// const userDetails=new userSchema({
-//     fname:String,
-//     lname:String,
-//     email:String,
-//     password:String
-// },
-// {
-//     collection :"userinfo"
-// })
-// export default mongoose.model("userinfo",userDetails);
-
 import mongoose, { Document, Schema } from "mongoose";
 
 interface IUserDetails extends Document {
@@ -27,6 +12,7 @@ const userDetailsSchema: Schema<IUserDetails> = new Schema({
     lname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    
 },
 {
     collection: "userinfo"

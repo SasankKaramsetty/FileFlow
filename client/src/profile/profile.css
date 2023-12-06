@@ -1,5 +1,3 @@
-/* Add these styles to your CSS file or use inline styles in React components */
-
 .profile-container {
     max-width: 600px;
     margin: auto;
@@ -22,4 +20,28 @@
   p {
     margin: 10px 0;
   }
-  
+
+.logout-button,
+.delete-account {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.logout-button {
+  background-color: #f44336;
+  color: #fff; 
+}
+
+.delete-account {
+  background-color: #2196f3; 
+  color: #fff; 
+}
+
+.logout-button:hover,
+.delete-account:hover {
+  opacity: 0.8;
+}

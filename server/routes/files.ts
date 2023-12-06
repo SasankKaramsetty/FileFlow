@@ -188,6 +188,57 @@ router.post("/signup",async(req,res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
+
+router.post("/login",async (req,res)=>{
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Please provide email and password.' });
+      }
+    try {
+        const user = await UserDetails.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+          }
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+          if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid password' });
+          }
+          res.status(200).json({
+            status: 'ok',
+            user: {
+              _id: user._id,
+              fname: user.fname,
+              lname: user.lname,
+              email: user.email,
+            },
+          });
+    } catch (error) {
+        console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' }); 
+    }
+})
+
+router.delete('/delete-account', async (req, res) => {
+    const { email, fname, lname } = req.body;
+  
+    if (!email || !fname || !lname) {
+      return res.status(400).json({ error: 'Email, fname, and lname are required for account deletion' });
+    }
+  
+    try {
+      const deletedUser = await UserDetails.findOneAndDelete({ email, fname, lname });
+  
+      if (deletedUser) {
+        return res.json({ status: 'ok', message: 'Account deleted successfully' });
+      } else {
+        return res.status(404).json({ error: 'User not found' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });  
+
 router.get("/profile/:id", async (req, res) => {
     try {
       const userId = req.params.id;

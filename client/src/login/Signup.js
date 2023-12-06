@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
-const Signup = () => {
+const Signup = ({onSignup}) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fname: '',
@@ -46,6 +46,7 @@ const Signup = () => {
 
       if (data.status === 'ok') {
         localStorage.setItem('user', JSON.stringify(data.user));
+        onSignup(data);
         navigate('/');
         alert('Registration Successful');
       } else {
