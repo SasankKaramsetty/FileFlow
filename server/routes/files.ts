@@ -5,10 +5,11 @@ import file from "../models/File";
 import https from "https";
 import nodemailer from "nodemailer";
 import emailTemplate from "../utils/emailTemplate";
-import { error } from "console";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import UserDetails from "../models/userDetails";
+import Email from '../models/Email';
+// import { any } from "prop-types";
 express().use(cors());
 const router=express.Router();
 const storage=multer.diskStorage({});
@@ -90,68 +91,96 @@ router.get("/:id/download",async (req,res)=>{
     }
 }) 
 
-router.post("/email",async (req,res)=>{
-    console.log("Received request body:", req.body);
-    //validate request 
-    const{id,emailFrom,emailTo}=req.body;
-    if(!emailFrom || !emailTo)
-    {
-        return(res.status(400).json({message:"Invalid Data"}))
-    }
-    //check if the file exists 
-    const check_File=await file.findById(id);
-    if(!check_File)
-    {
-        return res.status(404).json({message:"File Does Not Exist"})
-    }
-    //create transporter
-    let transporter = nodemailer.createTransport({
-        // @ts-ignore
-        host:process.env.BREVO_SMTP_HOST,
-        port: process.env.BREVO_SMTP_PORT,
-        secure: false,
-        auth: {
-          // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-          user:process.env.BREVO_SMTP_USER,
-          pass:process.env.BREVO_SMTP_PASSWORD,
-        },
-      });
+router.post('/email', async (req, res) => {
+    console.log('Received request body:', req.body);
 
-      //preparing the email data
-      const{filename,sizeInBytes}=check_File;
-      console.log("preparing the email data",req.body)
-      const filesize=`${(Number(sizeInBytes)/(1024*1024)).toFixed(2)}MB`;
-      
-      const downloadPageLink=`${process.env.api_base_endpoint_client}download/${id}`
-      const mailOptions={
-        from: emailFrom, // sender address
-        to: emailTo, // list of receivers
-        subject: "file share with you ", // Subject line
-        text: `${emailFrom} shared one image to you `, // plain text body
-        html: emailTemplate(emailFrom,emailTo,downloadPageLink,filename,filesize), // html body
+    const { id, emailTo, emailFrom } = req.body;
+    if (!emailTo) {
+      return res.status(400).json({ message: 'Invalid Data' });
+    }
+  
+    // Check if the file exists
+    const check_File = await file.findById(id);
+    if (!check_File) {
+      return res.status(404).json({ message: 'File Does Not Exist' });
+    }
+    const transporter = nodemailer.createTransport({
+      //@ts-ignore
+      host: process.env.BREVO_SMTP_HOST,
+      port: process.env.BREVO_SMTP_PORT,
+      secure: false,
+      auth: {
+        user: process.env.BREVO_SMTP_USER,
+        pass: process.env.BREVO_SMTP_PASSWORD,
+      },
+    });
+
+    const { filename, sizeInBytes } = check_File;
+    const filesize = `${(Number(sizeInBytes) / (1024 * 1024)).toFixed(2)}MB`;
+    const downloadPageLink=check_File.secure_url;
+    const mailOptions = {
+      from: emailFrom,
+      to: emailTo,
+      subject: 'File shared with you',
+      text: `${emailFrom} shared one image with you `,
+      html: emailTemplate(emailFrom, emailTo, downloadPageLink, filename, filesize),
+    };
+  
+    // Sending email using transporter
+    console.log('Ready to send the email', req.body);
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Server error', error: error.message });
       }
-
-      //sending email using tansporter
-      console.log(error)
-      console.log("ready to send the fail",req.body)
-      
-        transporter.sendMail(mailOptions,async (error,info)=>{
-            if(error){
-                console.log(error);
-                return res.status(500).json({message:"server error",error:error.message});
-            }
-            check_File.sender=emailFrom;
-            check_File.reciver=emailTo;
-
-            await check_File.save();
-            return res.status(200).json({message:"Email sent"});
-
+  
+      // Save email history
+      try {
+        const user = await UserDetails.findOne({ email: emailFrom });
+        if (user) {
+          user.emailHistory.push({
+            to: emailTo,
+            subject: mailOptions.subject,
+            body: mailOptions.text,
+            timestamp: new Date(),
+          });
+          await user.save();
+        }
+  
+        // Save email information in the Email schema
+        const newEmail = new Email({
+          file: check_File._id,
+          emailFrom,
+          emailTo,
+          filename,
         });
-        
-
-      // save the data and send the response
-
-})
+  
+        await newEmail.save();
+  
+        // Update file sender and receiver
+        check_File.sender = emailFrom;
+        check_File.reciver = emailTo;
+        await check_File.save();
+  
+        return res.status(200).json({ message: 'Email sent' });
+      } catch (error:any) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error saving email history', error: error.message });
+      }
+    });
+  });
+  
+router.get('/history/:emailFrom', async (req, res) => {
+  try {
+    const {emailFrom } = req.params;
+    const fileHistory=await file.find({ $or: [{ sender: emailFrom }, { reciver: emailFrom }] }).sort({ createdAt: -1 });
+    
+    return res.status(200).json({ fileHistory });
+  } catch (error:any) {
+    console.error('Error fetching file history:', error);
+    return res.status(500).json({ message: 'Error fetching file history', error: error.message });
+  }
+});
 
 router.post("/signup",async(req,res)=>{
     const { fname, lname, email, password } = req.body;

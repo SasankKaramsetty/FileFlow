@@ -67,8 +67,9 @@
         <div class="logo">
           FileFlow
         </div>
-        <h1>Hey ${emailTo},</h1>
-        <p>${emailFrom} shared an image with you. You can download it using the link below:</p>
+        
+        <h1>Hey ${emailTo.split('@')[0]},</h1>
+        <p>${emailFrom.split('@')[0]} shared an image with you. You can download it using the link below:</p>
         <p><strong>File Name:</strong> ${filename}</p>
         <p><strong>File Size:</strong> ${filesize}</p>
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; box-sizing: border-box; width: 100%;" width="100%">

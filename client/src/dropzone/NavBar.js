@@ -10,11 +10,11 @@ const NavBar = () => {
         FileFlow
       </NavLink>
       <div>
+      <NavLink to="/history" activeClassName="active-link">
+          <FontAwesomeIcon icon={faHistory} /> 
+        </NavLink>
         <NavLink to="/profile" activeClassName="active-link">
           <FontAwesomeIcon icon={faUser} /> 
-        </NavLink>
-        <NavLink to="/history" activeClassName="active-link">
-          <FontAwesomeIcon icon={faHistory} /> 
         </NavLink>
       </div>
     </nav>
