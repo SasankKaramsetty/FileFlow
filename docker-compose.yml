@@ -1,0 +1,20 @@
+version: '3.5'
+services:
+  frontend:
+    image: sasank8328/fileflow-client:latest
+    ports:
+      - '3000:3000'
+  backend:
+    image: sasank8328/fileflow-server:latest
+    ports:
+      - '8000:8000'
+    environment:
+      - PORT=8000
+      - MANGO_URI=mongodb+srv://sasank:test123@cluster0.ziegklh.mongodb.net/?retryWrites=true&w=majority
+      - cloudinary_api_key=923444278322786
+      - cloudinary_api_secret=QlAcK9tcQAVufLxpg7jJT_XYEUM
+      - cloudinary_cloud_name=dmle4nasb
+      - BREVO_SMTP_HOST=smtp-relay.brevo.com
+      - BREVO_SMTP_PORT=587
+      - BREVO_SMTP_PASSWORD=EvQtWgKfsHyaJMzY
+      - BREVO_SMTP_USER=ghostriderbngltoindore@gmail.com
