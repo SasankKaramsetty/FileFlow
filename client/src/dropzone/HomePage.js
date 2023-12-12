@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DragDropFiles from "../dropzone/DragDropFiles";
 import '../styles/drop.css';
-import '../styles/nav.css';
+import "../navbar/nav.css"
 
 const HomePage = () => {
   const [file, setFile] = useState(null);

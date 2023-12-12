@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
-import NavBar from '../src/dropzone/NavBar';
+import NavBar from '../src/navbar/NavBar';
 import HomePage from '../src/dropzone/HomePage';
 import UserProfile from './profile/UserProfile';
 import HistoryPage from '../src/History/HistoryPage';
