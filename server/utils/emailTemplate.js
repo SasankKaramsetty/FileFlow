@@ -1,4 +1,4 @@
-  const emailTemplate = (emailFrom:string,emailTo:string,downloadPageLink:string, filename:string, filesize:string) => {
+  const emailTemplate = (emailFrom,emailTo,downloadPageLink, filename, filesize) => {
     return `
     <!DOCTYPE html>
     <html lang="en">

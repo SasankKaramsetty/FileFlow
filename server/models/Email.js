@@ -1,7 +1,4 @@
-// models/Email.js
-
 import mongoose from 'mongoose';
-
 const emailSchema = new mongoose.Schema({
   file: {
     type: mongoose.Schema.Types.ObjectId,
