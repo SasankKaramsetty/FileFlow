@@ -45,7 +45,8 @@ const Login = ({onLogin}) => {
         alert("User is Not there Create New Account")
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      // console.error('Error during login:', error);
+      console.log('Error during login:', error);
     }
   };
 
@@ -55,24 +56,26 @@ const Login = ({onLogin}) => {
         <h1 className="appTitle">FileFlow</h1>
 
         <div className="mb-3">
-          <label>Email address</label>
+          <label htmlFor="email">Email address</label>
           <input
             type="email"
             className="form-control"
             placeholder="Enter email"
             name="email"
+            id='email'
             onChange={handleInputChange}
             value={formData.email}
           />
         </div>
 
         <div className="mb-3">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             className="form-control"
             placeholder="Enter password"
             name="password"
+            id='password'
             onChange={handleInputChange}
             value={formData.password}
           />
