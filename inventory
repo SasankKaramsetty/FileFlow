@@ -1,1 +1,1 @@
-localhost ansible_user = sasank
+localhost ansible_user = cd 
